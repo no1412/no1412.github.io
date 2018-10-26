@@ -36,9 +36,9 @@
       <category term="大数据" scheme="http://blog.yourprecious.cn/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="流处理" scheme="http://blog.yourprecious.cn/tags/%E6%B5%81%E5%A4%84%E7%90%86/"/>
-    
       <category term="Flink" scheme="http://blog.yourprecious.cn/tags/Flink/"/>
+    
+      <category term="流处理" scheme="http://blog.yourprecious.cn/tags/%E6%B5%81%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -191,11 +191,11 @@
       <category term="大数据" scheme="http://blog.yourprecious.cn/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="流处理" scheme="http://blog.yourprecious.cn/tags/%E6%B5%81%E5%A4%84%E7%90%86/"/>
-    
       <category term="Flink" scheme="http://blog.yourprecious.cn/tags/Flink/"/>
     
       <category term="Kafka" scheme="http://blog.yourprecious.cn/tags/Kafka/"/>
+    
+      <category term="流处理" scheme="http://blog.yourprecious.cn/tags/%E6%B5%81%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
