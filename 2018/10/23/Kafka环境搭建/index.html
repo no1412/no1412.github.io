@@ -85,7 +85,7 @@
 
 
 
-  <meta name="keywords" content="Flink,Kafka,Spring Boot,">
+  <meta name="keywords" content="Kafka,">
 
 
 
@@ -98,18 +98,18 @@
 
 
 
-<meta name="description" content="如果直接在Flink的执行程序中引入Spring容器的相关实例如dao、service会因为Spring容器中有一些实例没有实现序列化接口而导致Flink在加载配置过程中抛出无法序列化异常。">
-<meta name="keywords" content="Flink,Kafka,Spring Boot">
+<meta name="description" content="Kafka入门——Kafka环境搭建">
+<meta name="keywords" content="Kafka">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flink Kafka Consumer 集成Spring boot">
-<meta property="og:url" content="http://blog.yourprecious.cn/2018/10/16/Flink-Kafka-Consumer-如何集成Spring-boot/index.html">
+<meta property="og:title" content="Kafka环境搭建">
+<meta property="og:url" content="http://blog.yourprecious.cn/2018/10/23/Kafka环境搭建/index.html">
 <meta property="og:site_name" content="Malcolm&#39;s blog">
-<meta property="og:description" content="如果直接在Flink的执行程序中引入Spring容器的相关实例如dao、service会因为Spring容器中有一些实例没有实现序列化接口而导致Flink在加载配置过程中抛出无法序列化异常。">
+<meta property="og:description" content="Kafka入门——Kafka环境搭建">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-26T12:41:44.208Z">
+<meta property="og:updated_time" content="2018-10-26T13:30:05.469Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Flink Kafka Consumer 集成Spring boot">
-<meta name="twitter:description" content="如果直接在Flink的执行程序中引入Spring容器的相关实例如dao、service会因为Spring容器中有一些实例没有实现序列化接口而导致Flink在加载配置过程中抛出无法序列化异常。">
+<meta name="twitter:title" content="Kafka环境搭建">
+<meta name="twitter:description" content="Kafka入门——Kafka环境搭建">
 
 
 
@@ -139,13 +139,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.yourprecious.cn/2018/10/16/Flink-Kafka-Consumer-如何集成Spring-boot/">
+  <link rel="canonical" href="http://blog.yourprecious.cn/2018/10/23/Kafka环境搭建/">
 
 
 
 
 
-  <title>Flink Kafka Consumer 集成Spring boot | Malcolm's blog</title>
+  <title>Kafka环境搭建 | Malcolm's blog</title>
   
 
 
@@ -284,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.yourprecious.cn/2018/10/16/Flink-Kafka-Consumer-如何集成Spring-boot/">
+    <link itemprop="mainEntityOfPage" href="http://blog.yourprecious.cn/2018/10/23/Kafka环境搭建/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Malcolm Li">
@@ -301,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Flink Kafka Consumer 集成Spring boot</h1>
+          <h1 class="post-title" itemprop="name headline">Kafka环境搭建</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T22:42:14+08:00">
-                2018-10-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-23T20:10:50+08:00">
+                2018-10-23
               </time>
             
 
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  313
+                  189
                 </span>
               
 
@@ -405,13 +405,27 @@
 
       
         <blockquote>
-<p>如果直接在Flink的执行程序中引入Spring容器的相关实例如dao、service会因为Spring容器中有一些实例没有实现序列化接口而导致Flink在加载配置过程中抛出无法序列化异常。</p>
+<p>Kafka入门——Kafka环境搭建</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="Flink-Kafka-Consumer集成Spring-boot"><a href="#Flink-Kafka-Consumer集成Spring-boot" class="headerlink" title="Flink Kafka Consumer集成Spring boot"></a>Flink Kafka Consumer集成Spring boot</h3><p>思路是将Spring容器的实例通过Spring容器来获取，而不是采取自动注入的方式。</p>
-<h4 id="ApplicationContextUtil"><a href="#ApplicationContextUtil" class="headerlink" title="ApplicationContextUtil"></a>ApplicationContextUtil</h4><p>ApplicationContextUtil工具类通过手动获取bean的方式来获取Spring容器中的实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationContextUtil</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span>, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取上下文</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ApplicationContext <span class="title">getApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置上下文</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> </span>&#123;</span><br><span class="line">        ApplicationContextUtil.applicationContext = applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过名字获取上下文中的bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过类型获取上下文中的bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(Class&lt;?&gt; requiredType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(requiredType);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="加载Spring容器"><a href="#加载Spring容器" class="headerlink" title="加载Spring容器"></a>加载Spring容器</h3><p>在sink的子类的open方法中加载Spring的容器，初始化相关实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">(Configuration parameters)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    String[] args = &#123;&#125;;</span><br><span class="line">    CciEigenvalueExtractionApplication.main(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="获取Spring容器中的实例"><a href="#获取Spring容器中的实例" class="headerlink" title="获取Spring容器中的实例"></a>获取Spring容器中的实例</h3><p>在sink的子类的open方法中加载Spring的容器，初始化相关实例。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在需要获取Spring容器实例的地方通过Spring容器工具类获取对应的实例</span></span><br><span class="line">ApplicationContextUtil.getBean(<span class="string">"bean name"</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><h3 id="下载Kafka"><a href="#下载Kafka" class="headerlink" title="下载Kafka"></a>下载Kafka</h3><blockquote>
+<p>Kafka官方网站：<a href="http://kafka.apache.org/" target="_blank" rel="noopener">http://kafka.apache.org</a></p>
+</blockquote>
+<blockquote>
+<p>目前的最新版本是：<a href="https://www.apache.org/dyn/closer.cgi?path=/kafka/2.0.0/kafka_2.12-2.0.0.tgz" target="_blank" rel="noopener">kafka_2.12-2.0.0</a></p>
+</blockquote>
+<h2 id="2-参数配置"><a href="#2-参数配置" class="headerlink" title="2. 参数配置"></a>2. 参数配置</h2><h3 id="配置server-properties"><a href="#配置server-properties" class="headerlink" title="配置server.properties"></a>配置server.properties</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listeners=PLAINTEXT://localhost:<span class="number">9092</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-基础命令"><a href="#3-基础命令" class="headerlink" title="3. 基础命令"></a>3. 基础命令</h2><h3 id="启动zoopkeeper-2181"><a href="#启动zoopkeeper-2181" class="headerlink" title="启动zoopkeeper 2181"></a>启动zoopkeeper 2181</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/kafka_2.<span class="number">12</span>-<span class="number">2.0</span>.<span class="number">0</span></span><br><span class="line">bin/zookeeper-server-start.sh config/zookeeper.properties &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="启动-kafka-9092"><a href="#启动-kafka-9092" class="headerlink" title="启动 kafka 9092"></a>启动 kafka 9092</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/kafka_2.<span class="number">12</span>-<span class="number">2.0</span>.<span class="number">0</span></span><br><span class="line">bin/kafka-server-start.sh config/server.properties &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="创建-topic"><a href="#创建-topic" class="headerlink" title="创建 topic"></a>创建 topic</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh --create --zookeeper localhost:<span class="number">2181</span> --replication-factor <span class="number">1</span> --partitions partition_count --topic topic_name</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>partition_count</strong>：partition的数)<br><strong>topic_name</strong>：topic名)</p>
+</blockquote>
+<h3 id="删除-topic"><a href="#删除-topic" class="headerlink" title="删除 topic"></a>删除 topic</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-topics.sh  --delete --zookeeper localhost:<span class="number">2181</span>  --topic topic_name</span><br></pre></td></tr></table></figure>
+<h3 id="查看数据"><a href="#查看数据" class="headerlink" title="查看数据"></a>查看数据</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/kafka_2.<span class="number">12</span>-<span class="number">2.0</span>.<span class="number">0</span></span><br><span class="line">bin/kafka-run-class.sh kafka.tools.DumpLogSegments --files /tmp/kafka-logs/topic_name-<span class="number">0</span>/<span class="number">00000000000000000000</span>.log --print-data-log Dumping /tmp/kafka-logs/topic_name-<span class="number">0</span>/<span class="number">00000000000000000000</span>.log</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>topic_name</strong>：topic名称<br>日志的路径可以在配置文件<strong>server.properties</strong>中的<strong>log.dir</strong>看到</p>
+</blockquote>
 
       
     </div>
@@ -429,11 +443,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Flink/" rel="tag"># Flink</a>
-          
             <a href="/tags/Kafka/" rel="tag"># Kafka</a>
-          
-            <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
           
         </div>
       
@@ -446,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/16/一个Flink消费Kafka的消息流的例子/" rel="next" title="一个Flink消费Kafka的消息流的例子">
-                <i class="fa fa-chevron-left"></i> 一个Flink消费Kafka的消息流的例子
+              <a href="/2018/10/22/在博客嵌入网易云播放器/" rel="next" title="在博客嵌入网易云播放器">
+                <i class="fa fa-chevron-left"></i> 在博客嵌入网易云播放器
               </a>
             
           </div>
@@ -456,8 +466,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/22/在博客嵌入网易云播放器/" rel="prev" title="在博客嵌入网易云播放器">
-                在博客嵌入网易云播放器 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/23/MongoDB表和数据库的导入导出/" rel="prev" title="MongoDB和Collection的导入导出">
+                MongoDB和Collection的导入导出 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -614,7 +624,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flink-Kafka-Consumer集成Spring-boot"><span class="nav-number">1.</span> <span class="nav-text">Flink Kafka Consumer集成Spring boot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ApplicationContextUtil"><span class="nav-number">1.1.</span> <span class="nav-text">ApplicationContextUtil</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载Spring容器"><span class="nav-number">2.</span> <span class="nav-text">加载Spring容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取Spring容器中的实例"><span class="nav-number">3.</span> <span class="nav-text">获取Spring容器中的实例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-环境准备"><span class="nav-number">1.</span> <span class="nav-text">1. 环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载Kafka"><span class="nav-number">1.1.</span> <span class="nav-text">下载Kafka</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-参数配置"><span class="nav-number">2.</span> <span class="nav-text">2. 参数配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置server-properties"><span class="nav-number">2.1.</span> <span class="nav-text">配置server.properties</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-基础命令"><span class="nav-number">3.</span> <span class="nav-text">3. 基础命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动zoopkeeper-2181"><span class="nav-number">3.1.</span> <span class="nav-text">启动zoopkeeper 2181</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动-kafka-9092"><span class="nav-number">3.2.</span> <span class="nav-text">启动 kafka 9092</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-topic"><span class="nav-number">3.3.</span> <span class="nav-text">创建 topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除-topic"><span class="nav-number">3.4.</span> <span class="nav-text">删除 topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看数据"><span class="nav-number">3.5.</span> <span class="nav-text">查看数据</span></a></li></ol></li></ol></div>
             
 
           </div>
